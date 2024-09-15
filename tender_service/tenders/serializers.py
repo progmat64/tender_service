@@ -33,6 +33,9 @@ class TenderSerializer(serializers.ModelSerializer):
 
 
 class BidSerializer(serializers.ModelSerializer):
+    creator = serializers.SlugRelatedField(
+        slug_field="username", queryset=Employee.objects.all()
+    )
     class Meta:
         model = Bid
         fields = "__all__"

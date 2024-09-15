@@ -97,3 +97,65 @@ class MyTenderListView(APIView):
 
         serializer = TenderSerializer(tenders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+
+class MyBidListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        username = request.query_params.get('username', None)
+        if username is None:
+            return Response({"error": "Username is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Фильтруем предложения по пользователю
+        bids = Bid.objects.filter(creator__username=username)
+
+        if not bids.exists():
+            return Response({"error": "No bids found for this user"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = BidSerializer(bids, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TenderBidListView(APIView):
+    def get(self, request, tender_id):
+        try:
+            bids = Bid.objects.filter(tender_id=tender_id)
+        except Bid.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = BidSerializer(bids, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class BidEditView(APIView):
+    def patch(self, request, bid_id):
+        try:
+            bid = Bid.objects.get(id=bid_id)
+        except Bid.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = BidSerializer(bid, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BidRollbackView(APIView):
+    def put(self, request, bid_id, version):
+        try:
+            bid = Bid.objects.get(id=bid_id)
+        except Bid.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if version >= bid.version:
+            return Response({"error": "Cannot rollback to a future version"}, status=status.HTTP_400_BAD_REQUEST)
+
+        bid.version = version
+        bid.save()
+
+        serializer = BidSerializer(bid)
+        return Response(serializer.data, status=status.HTTP_200_OK)
