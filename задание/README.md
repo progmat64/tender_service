@@ -35,7 +35,7 @@
 
 ```sql
 CREATE TABLE employee (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR(50) UNIQUE NOT NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
@@ -53,7 +53,7 @@ CREATE TYPE organization_type AS ENUM (
 );
 
 CREATE TABLE organization (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
     description TEXT,
     type organization_type,
@@ -62,9 +62,9 @@ CREATE TABLE organization (
 );
 
 CREATE TABLE organization_responsible (
-    id SERIAL PRIMARY KEY,
-    organization_id INT REFERENCES organization(id) ON DELETE CASCADE,
-    user_id INT REFERENCES employee(id) ON DELETE CASCADE
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id UUID REFERENCES organization(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES employee(id) ON DELETE CASCADE
 );
 ```
 
@@ -87,50 +87,71 @@ CREATE TABLE organization_responsible (
 Доступные действия с тендером:
 
 - **Создание**:
+
   - Тендер будет создан.
+
   - Доступен только ответственным за организацию.
+
   - Статус: `CREATED`.
 
 - **Публикация**:
+
   - Тендер становится доступен всем пользователям.
+
   - Статус: `PUBLISHED`.
 
 - **Закрытие**:
+
   - Тендер больше не доступен пользователям, кроме ответственных за организацию.
+
   - Статус: `CLOSED`.
 
 - **Редактирование**:
+
   - Изменяются характеристики тендера.
+
   - Увеличивается версия.
 
 #### Предложение
 
-Предложения могут создавать пользователи либо от имени своей организации.
+Предложения могут создавать пользователи от имени своей организации.
 
-Предложение связано только с одним тендером.
+Предложение связано только с одним тендером. Один пользователь может быть ответственным в одной организации.
 
 Доступные действия с предложениями:
 
 - **Создание**:
+
   - Предложение будет создано.
+
   - Доступно только автору и ответственным за организацию.
+
   - Статус: `CREATED`.
 
 - **Публикация**:
+
   - Предложение становится доступно ответственным за организацию и автору.
+
   - Статус: `PUBLISHED`.
 
 - **Отмена**:
+
   - Виден только автору и ответственным за организацию.
+
   - Статус: `CANCELED`.
 
 - **Редактирование**:
+
   - Изменяются характеристики предложения.
+
   - Увеличивается версия.
 
 - **Согласование/отклонение**:
+
   - Доступно только ответственным за организацию, связанной с тендером.
+
   - Решение может быть принято любым ответственным.
+
   - При согласовании одного предложения, тендер автоматически закрывается.
 
 ## Дополнительные требования
