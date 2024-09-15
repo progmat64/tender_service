@@ -16,7 +16,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Employee",
             fields=[
-                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "password",
+                    models.CharField(max_length=128, verbose_name="password"),
+                ),
                 (
                     "last_login",
                     models.DateTimeField(
@@ -33,8 +36,14 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("username", models.CharField(max_length=50, unique=True)),
-                ("first_name", models.CharField(blank=True, max_length=50, null=True)),
-                ("last_name", models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "first_name",
+                    models.CharField(blank=True, max_length=50, null=True),
+                ),
+                (
+                    "last_name",
+                    models.CharField(blank=True, max_length=50, null=True),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
                 ("is_active", models.BooleanField(default=True)),
@@ -61,14 +70,16 @@ class Migration(migrations.Migration):
             model_name="bid",
             name="creator",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="tenders.employee"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tenders.employee",
             ),
         ),
         migrations.AlterField(
             model_name="tender",
             name="creator",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="tenders.employee"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="tenders.employee",
             ),
         ),
     ]

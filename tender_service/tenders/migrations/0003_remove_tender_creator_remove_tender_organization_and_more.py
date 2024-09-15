@@ -9,7 +9,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("tenders", "0002_employee_tender_service_type_alter_bid_creator_and_more"),
+        (
+            "tenders",
+            "0002_employee_tender_service_type_alter_bid_creator_and_more",
+        ),
     ]
 
     operations = [
@@ -50,7 +53,10 @@ class Migration(migrations.Migration):
             model_name="organization",
             name="id",
             field=models.UUIDField(
-                default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                default=uuid.uuid4,
+                editable=False,
+                primary_key=True,
+                serialize=False,
             ),
         ),
         migrations.CreateModel(

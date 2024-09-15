@@ -7,7 +7,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("tenders", "0006_alter_bid_id_alter_organizationresponsible_id_and_more"),
+        (
+            "tenders",
+            "0006_alter_bid_id_alter_organizationresponsible_id_and_more",
+        ),
     ]
 
     operations = [
@@ -37,7 +40,8 @@ class Migration(migrations.Migration):
                 (
                     "bid",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="tenders.bid"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="tenders.bid",
                     ),
                 ),
             ],

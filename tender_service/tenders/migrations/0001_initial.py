@@ -123,7 +123,8 @@ class Migration(migrations.Migration):
                 (
                     "tender",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="tenders.tender"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="tenders.tender",
                     ),
                 ),
             ],

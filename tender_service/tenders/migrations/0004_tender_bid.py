@@ -9,7 +9,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("tenders", "0003_remove_tender_creator_remove_tender_organization_and_more"),
+        (
+            "tenders",
+            "0003_remove_tender_creator_remove_tender_organization_and_more",
+        ),
     ]
 
     operations = [
@@ -105,7 +108,8 @@ class Migration(migrations.Migration):
                 (
                     "tender",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="tenders.tender"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="tenders.tender",
                     ),
                 ),
             ],
