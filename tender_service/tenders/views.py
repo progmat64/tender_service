@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Tender, Bid
 from .serializers import TenderSerializer, BidSerializer
+from rest_framework.permissions import IsAuthenticated
 
 class PingView(APIView):
     def get(self, request):
@@ -71,9 +72,28 @@ class TenderRollbackView(APIView):
         if version >= tender.version:
             return Response({"error": "Cannot rollback to a future version"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Для простоты представим, что сохраняем предыдущие версии в поле `history`, но можно использовать более сложные механизмы
         tender.version = version
         tender.save()
 
         serializer = TenderSerializer(tender)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+class MyTenderListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        username = request.query_params.get('username', None)
+        if username is None:
+            return Response({"error": "Username is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Фильтруем тендеры по пользователю
+        tenders = Tender.objects.filter(creator__username=username)
+        
+        if not tenders.exists():
+            return Response({"error": "No tenders found for this user"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = TenderSerializer(tenders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
