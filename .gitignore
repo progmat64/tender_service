@@ -30,3 +30,4 @@ HELP.md
 .vscode/
 
 venv
+.env
