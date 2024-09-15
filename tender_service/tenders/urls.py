@@ -1,13 +1,12 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import TenderViewSet, BidViewSet, ping
-
-router = DefaultRouter()
-router.register(r'tenders', TenderViewSet)
-router.register(r'bids', BidViewSet)
+from django.urls import path
+from .views import PingView, TenderListView
+from .views import TenderCreateView, TenderListView, TenderEditView, TenderRollbackView, BidCreateView
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('ping/', ping),  # Эндпоинт для проверки доступности
-    path('tenders/my', TenderViewSet.as_view({'get': 'my'})),  # получение тендеров пользователя
+    path('ping/', PingView.as_view()),
+    path('tenders/', TenderListView.as_view()),
+    path('tenders/new/', TenderCreateView.as_view()),
+    path('tenders/<uuid:tender_id>/edit/', TenderEditView.as_view()),
+    path('tenders/<uuid:tender_id>/rollback/<int:version>/', TenderRollbackView.as_view()),
+    path('bids/new/', BidCreateView.as_view()),
 ]
