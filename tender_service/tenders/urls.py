@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     PingView, TenderListView, TenderCreateView, TenderEditView, TenderRollbackView, 
-    BidCreateView, MyTenderListView, MyBidListView, TenderBidListView, BidEditView, BidRollbackView
+    BidCreateView, MyTenderListView, MyBidListView, TenderBidListView, BidEditView, BidRollbackView, TenderBidReviewsView
 )
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     path('bids/<int:tender_id>/list/', TenderBidListView.as_view(), name='bid-list'),
     path('bids/<int:bid_id>/edit/', BidEditView.as_view(), name='bid-edit'),
     path('bids/<int:bid_id>/rollback/<int:version>/', BidRollbackView.as_view(), name='bid-rollback'),
+    path('bids/<int:tender_id>/reviews/', TenderBidReviewsView.as_view(), name='bid-reviews'),
 ]

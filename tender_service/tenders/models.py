@@ -73,3 +73,16 @@ class Bid(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+class Review(models.Model):
+    bid = models.ForeignKey(Bid, on_delete=models.CASCADE)
+    author = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Автор отзыва
+    review_text = models.TextField()
+    rating = models.IntegerField(default=1)  # Рейтинг, например от 1 до 5
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Review by {self.author.username} on {self.bid.name}'

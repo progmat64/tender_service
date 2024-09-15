@@ -1,9 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Tender, Bid
+from .models import Tender, Bid, Review, Organization, Employee
 from .serializers import TenderSerializer, BidSerializer
 from rest_framework.permissions import IsAuthenticated
+from .serializers import ReviewSerializer
+from django.db.models import Q
+
 
 class PingView(APIView):
     def get(self, request):
@@ -159,3 +162,39 @@ class BidRollbackView(APIView):
 
         serializer = BidSerializer(bid)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TenderBidReviewsView(APIView):
+    def get(self, request, tender_id):
+        author_username = request.query_params.get('authorUsername', None)
+        organization_id = request.query_params.get('organizationId', None)
+
+        if not author_username or not organization_id:
+            return Response({"error": "Author username and organization ID are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Проверяем, существует ли организация
+            organization = Organization.objects.get(id=organization_id)
+
+            # Проверяем, существует ли автор
+            author = Employee.objects.get(username=author_username)
+
+            # Получаем все предложения автора, связанные с данным тендером и организацией
+            bids = Bid.objects.filter(
+                tender_id=tender_id,
+                creator=author,
+                organization=organization
+            )
+
+            if not bids.exists():
+                return Response({"error": "No bids found for this author in the specified tender and organization"}, status=status.HTTP_404_NOT_FOUND)
+
+            # Получаем все отзывы на эти предложения
+            reviews = Review.objects.filter(bid__in=bids)
+            serializer = ReviewSerializer(reviews, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Organization.DoesNotExist:
+            return Response({"error": "Organization not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Employee.DoesNotExist:
+            return Response({"error": "Author not found"}, status=status.HTTP_404_NOT_FOUND)
