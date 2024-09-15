@@ -1,13 +1,14 @@
 from django.db import models
-import uuid
+
 
 class Employee(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=50, unique=True)
     first_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
 class Organization(models.Model):
     ORGANIZATION_TYPES = [
@@ -16,7 +17,7 @@ class Organization(models.Model):
         ('JSC', 'JSC'),
     ]
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=10, choices=ORGANIZATION_TYPES, default='LLC')
@@ -24,7 +25,7 @@ class Organization(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class OrganizationResponsible(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     user = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
@@ -36,7 +37,7 @@ class Tender(models.Model):
         ('CLOSED', 'Closed'),
     ]
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
     service_type = models.CharField(max_length=50)
@@ -58,7 +59,7 @@ class Bid(models.Model):
         ('CANCELED', 'Canceled'),
     ]
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='CREATED')

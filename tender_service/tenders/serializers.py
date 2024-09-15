@@ -18,9 +18,9 @@ class OrganizationResponsibleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
 class TenderSerializer(serializers.ModelSerializer):
+    creator = serializers.SlugRelatedField(slug_field='username', queryset=Employee.objects.all())
+    
     class Meta:
         model = Tender
         fields = '__all__'
@@ -29,4 +29,5 @@ class BidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bid
         fields = '__all__'
+
 
