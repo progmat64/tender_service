@@ -1,34 +1,16 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-# from dotenv import load_dotenv
 
-# # Загружаем переменные окружения из файла .env
-# load_dotenv()
+load_dotenv()
 
-# BASE_DIR = Path(__file__).resolve().parent.parent
-
-# # Секретный ключ
-# SECRET_KEY = os.getenv("SECRET_KEY")
-
-# # Режим отладки
-# DEBUG = os.getenv("DEBUG", "False") == "True"
-
-# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-d!78(i@)xcu4eeb9bw+*mm(x5#5for^jtb9tf55&m)2lagl+hi"
-)
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -76,35 +58,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "tender_service.wsgi.application"
 
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('POSTGRES_DATABASE'),
+        'USER': os.getenv('POSTGRES_USERNAME'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('POSTGRES_HOST'),
+        'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         'NAME': "tenders",
-#         'USER': "adminDB",
-#         'PASSWORD': "12345",
-#         'HOST': "localhost"
-#     }
-# }
-
-
-# # Настройка базы данных через переменные окружения
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.getenv('POSTGRES_DATABASE'),
-#         'USER': os.getenv('POSTGRES_USERNAME'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-#         'HOST': os.getenv('POSTGRES_HOST'),
-#         'PORT': os.getenv('POSTGRES_PORT'),
-#     }
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
