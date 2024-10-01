@@ -35,9 +35,6 @@ Cоздать, активировать виртуальное окружени�
 
 ```
 cd tender_service
-```
-
-```
 pip install -r requirements.txt
 ```
 
@@ -62,13 +59,13 @@ pip install -r requirements.txt
 * Если у вас Linux/macOS:
 
     ```
-    python3 manage.py runserver
+    python3 manage.py runserver 8080
     ```
 
 * Если у вас windows:
 
     ```
-    python manage.py runserver
+    python manage.py runserver 8080
     ```
 
 ### API
