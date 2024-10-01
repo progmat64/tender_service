@@ -12,9 +12,9 @@ class Employee(models.Model):
 
 class Organization(models.Model):
     ORGANIZATION_TYPES = [
-        ("IE", "IE"),
-        ("LLC", "LLC"),
-        ("JSC", "JSC"),
+        ("IE", "Individual Entrepreneur"),
+        ("LLC", "Limited Liability Company"),
+        ("JSC", "Joint-Stock Company"),
     ]
 
     id = models.AutoField(primary_key=True)

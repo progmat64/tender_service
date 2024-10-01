@@ -3,8 +3,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django.db.models import Q
-
 from .models import Bid, Employee, Organization, Review, Tender
 from .serializers import BidSerializer, ReviewSerializer, TenderSerializer
 
@@ -98,7 +96,6 @@ class MyTenderListView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Фильтруем тендеры по пользователю
         tenders = Tender.objects.filter(creator__username=username)
 
         if not tenders.exists():
@@ -122,7 +119,6 @@ class MyBidListView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Фильтруем предложения по пользователю
         bids = Bid.objects.filter(creator__username=username)
 
         if not bids.exists():
@@ -192,13 +188,8 @@ class TenderBidReviewsView(APIView):
             )
 
         try:
-            # Проверяем, существует ли организация
             organization = Organization.objects.get(id=organization_id)
-
-            # Проверяем, существует ли автор
             author = Employee.objects.get(username=author_username)
-
-            # Получаем все предложения автора, связанные с данным тендером и организацией
             bids = Bid.objects.filter(
                 tender_id=tender_id, creator=author, organization=organization
             )
@@ -211,7 +202,6 @@ class TenderBidReviewsView(APIView):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            # Получаем все отзывы на эти предложения
             reviews = Review.objects.filter(bid__in=bids)
             serializer = ReviewSerializer(reviews, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
