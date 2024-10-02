@@ -20,6 +20,8 @@ def home_view(request):
     GET /api/tenders/my?username=user1
     PATCH /api/tenders/1/edit
     PUT /api/tenders/1/rollback/2
+    GET /tenders/1/status
+    PUT /tenders/1/status
     POST /api/bids/new
     GET /api/bids/my?username=user1
     PUT /api/bids/1/rollback/2
