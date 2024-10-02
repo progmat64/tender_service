@@ -2,9 +2,28 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.http import HttpResponse
 from .models import Bid, Employee, Organization, Review, Tender
 from .serializers import BidSerializer, ReviewSerializer, TenderSerializer
+
+
+def home_view(request):
+    text = """
+    Сервис проведения тендеров
+
+    API:
+    GET /api/ping/
+    GET /api/tenders/
+    POST /api/tenders/new
+    GET /api/tenders/my?username=user1
+    PATCH /api/tenders/1/edit
+    PUT /api/tenders/1/rollback/2
+    POST /api/bids/new
+    GET /api/bids/my?username=user1
+    PUT /api/bids/1/rollback/2
+    GET /api/bids/1/reviews?authorUsername=user2&organizationId=1
+    """
+    return HttpResponse(text, content_type="text/plain; charset=utf-8")
 
 
 class PingView(APIView):
@@ -48,6 +67,39 @@ class TenderListView(APIView):
     def get(self, request):
         tenders = Tender.objects.all()
         serializer = TenderSerializer(tenders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class TenderStatusView(APIView):
+    def get(self, request, tender_id):
+        try:
+            tender = Tender.objects.get(id=tender_id)
+            serializer = TenderSerializer(tender)
+            return Response(serializer.data.get("status"), status=status.HTTP_200_OK)
+        except Tender.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+
+    def put(self, request, tender_id):
+        try:
+            tender = Tender.objects.get(id=tender_id)
+        except Tender.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        new_status = request.query_params.get("status", None)
+        username = request.query_params.get("username", None)
+
+        if not new_status or not username:
+            return Response({"error": "Status and username are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        valid_statuses = [choice[0] for choice in Tender.STATUS_CHOICES]
+        if new_status not in valid_statuses:
+            return Response({"error": f"Invalid status. Valid statuses are: {', '.join(valid_statuses)}"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        tender.status = new_status
+        tender.save()
+
+        serializer = TenderSerializer(tender)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
