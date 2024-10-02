@@ -2,7 +2,9 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from django.http import HttpResponse
+
 from .models import Bid, Employee, Organization, Review, Tender
 from .serializers import BidSerializer, ReviewSerializer, TenderSerializer
 
@@ -69,15 +71,17 @@ class TenderListView(APIView):
         serializer = TenderSerializer(tenders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class TenderStatusView(APIView):
     def get(self, request, tender_id):
         try:
             tender = Tender.objects.get(id=tender_id)
             serializer = TenderSerializer(tender)
-            return Response(serializer.data.get("status"), status=status.HTTP_200_OK)
+            return Response(
+                serializer.data.get("status"), status=status.HTTP_200_OK
+            )
         except Tender.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
 
     def put(self, request, tender_id):
         try:
@@ -89,12 +93,19 @@ class TenderStatusView(APIView):
         username = request.query_params.get("username", None)
 
         if not new_status or not username:
-            return Response({"error": "Status and username are required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Status and username are required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         valid_statuses = [choice[0] for choice in Tender.STATUS_CHOICES]
         if new_status not in valid_statuses:
-            return Response({"error": f"Invalid status. Valid statuses are: {', '.join(valid_statuses)}"},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "error": f"Invalid status. Valid statuses are: {', '.join(valid_statuses)}"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         tender.status = new_status
         tender.save()

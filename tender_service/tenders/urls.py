@@ -38,6 +38,9 @@ urlpatterns = [
         TenderBidReviewsView.as_view(),
         name="bid-reviews",
     ),
-
-    path("tenders/<int:tender_id>/status/", TenderStatusView.as_view(), name="tender-status"),
+    path(
+        "tenders/<int:tender_id>/status/",
+        TenderStatusView.as_view(),
+        name="tender-status",
+    ),
 ]

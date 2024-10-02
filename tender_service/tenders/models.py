@@ -83,9 +83,7 @@ class Bid(models.Model):
 
 class Review(models.Model):
     bid = models.ForeignKey(Bid, on_delete=models.CASCADE)
-    author = models.ForeignKey(
-        Employee, on_delete=models.CASCADE
-    )
+    author = models.ForeignKey(Employee, on_delete=models.CASCADE)
     review_text = models.TextField()
     rating = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
