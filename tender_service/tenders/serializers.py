@@ -1,7 +1,13 @@
 from rest_framework import serializers
 
-from .models import (Bid, Employee, Organization, OrganizationResponsible,
-                     Review, Tender)
+from .models import (
+    Bid,
+    Employee,
+    Organization,
+    OrganizationResponsible,
+    Review,
+    Tender,
+)
 
 
 class EmployeeSerializer(serializers.ModelSerializer):

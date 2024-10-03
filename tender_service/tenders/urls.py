@@ -1,9 +1,20 @@
 from django.urls import path
 
-from .views import (BidCreateView, BidEditView, BidRollbackView, MyBidListView,
-                    MyTenderListView, PingView, TenderBidListView,
-                    TenderBidReviewsView, TenderCreateView, TenderEditView,
-                    TenderListView, TenderRollbackView, TenderStatusView)
+from .views import (
+    BidCreateView,
+    BidEditView,
+    BidRollbackView,
+    MyBidListView,
+    MyTenderListView,
+    PingView,
+    TenderBidListView,
+    TenderBidReviewsView,
+    TenderCreateView,
+    TenderEditView,
+    TenderListView,
+    TenderRollbackView,
+    TenderStatusView,
+)
 
 urlpatterns = [
     path("ping/", PingView.as_view(), name="ping"),
